@@ -454,10 +454,10 @@
 // 接口能够描述JavaScript中对象拥有的各种各样的外形。 除了描述带有属性的普通对象外，接口也可以描述函数类型。
 
 // 为了使用接口表示函数类型，我们需要给接口定义一个调用签名。 它就像是一个只有参数列表和返回值类型的函数定义。参数列表里的每个参数都需要名字和类型。
-interface SearchFunc {
-  (source: string, subString: string): boolean;
-  // 参数列表 返回值
-}
+// interface SearchFunc {
+//   (source: string, subString: string): boolean;
+//   // 参数列表 返回值
+// }
 // 这样定义后，我们可以像使用其它接口一样使用这个函数类型的接口。 下例展示了如何创建一个函数类型的变量，并将一个同类型的函数赋值给这个变量。
 
 // let mySearch: SearchFunc;
@@ -468,18 +468,18 @@ interface SearchFunc {
 
 // 对于函数类型的类型检查来说，函数的参数名不需要与接口里定义的名字相匹配。 比如，我们使用下面的代码重写上面的例子：
 
-let mySearch: SearchFunc;
-mySearch = function (src: string, sub: string): boolean {
-  let result = src.search(sub);
-  // String prototype 里面的方法  返回的是第一个被找到的元素下标 如果没找到返回-1
+// let mySearch: SearchFunc;
+// mySearch = function (src: string, sub: string): boolean {
+//   let result = src.search(sub);
+//   // String prototype 里面的方法  返回的是第一个被找到的元素下标 如果没找到返回-1
 
-  console.log(result)
-  // return result > -1;
-  return result > -1;
+//   console.log(result)
+//   // return result > -1;
+//   return result > -1;
 
-}
-mySearch('ewqe', 'wq')
-mySearch('ewqe', 'l')
+// }
+// mySearch('ewqe', 'wq')
+// mySearch('ewqe', 'l')
 
 // 函数的参数会逐个进行检查，要求对应位置上的参数类型是兼容的。 如果你不想指定类型，TypeScript的类型系统会推断出参数类型，因为函数直接赋值给了 SearchFunc类型变量。 函数的返回值类型是通过其返回值推断出来的（此例是 false和true）。 如果让这个函数返回数字或字符串，类型检查器会警告我们函数的返回值类型与 SearchFunc接口中的定义不匹配。
 // let mySearch: SearchFunc;
@@ -490,33 +490,84 @@ mySearch('ewqe', 'l')
 
 // 可索引的类型
 // 与使用接口描述函数类型差不多，我们也可以描述那些能够“通过索引得到”的类型，比如a[10]或ageMap["daniel"]。 可索引类型具有一个 索引签名，它描述了对象索引的类型，还有相应的索引返回值类型。 让我们看一个例子
-interface StringArray {
-  [index: number]: string;
-}
+// interface StringArray {
+//   [index: number]: string;
+// }
 
-let myArray: StringArray;
-myArray = ["Bob", "Fred"];
+// let myArray: StringArray;
+// myArray = ["Bob", "Fred"];
 
-let myStr: string = myArray[0];
+// let myStr: string = myArray[0];
 // 上面例子里，我们定义了StringArray接口，它具有索引签名。 这个索引签名表示了当用 number去索引StringArray时会得到string类型的返回值。
 
 // TypeScript支持两种索引签名：字符串和数字。 可以同时使用两种类型的索引，但是数字索引的返回值必须是字符串索引返回值类型的子类型。 这是因为当使用 number来索引时，JavaScript会将它转换成string然后再去索引对象。 也就是说用 100（一个number）去索引等同于使用"100"（一个string）去索引，因此两者需要保持一致。
 
-class Animal {
-  name: string;
-}
-class Dog extends Animal {
-  breed: string;
-}
+// class Animal {
+//   // constructor(){
+//   //   let name: string;
+//   // }
+//   name: string;
+// }
+// class Dog extends Animal {
+//   breed: string;
+// }
 
 // 错误：使用数值型的字符串索引，有时会得到完全不同的Animal!
-interface NotOkay {
-  [x: number]: Animal;
-  [x: string]: Dog;
+// interface NotOkay {
+//   [x: number]: Animal;
+//   [x: string]: Dog;
+// }
+
+// 字符串索引签名能够很好的描述dictionary模式，并且它们也会确保所有属性与其返回值类型相匹配。 因为字符串索引声明了 obj.property和obj["property"]两种形式都可以。 下面的例子里， name的类型与字符串索引类型不匹配，所以类型检查器给出一个错误提示：
+// interface NumberDictionary {
+//   [index: string]: number;
+//   length: number;    // 可以，length是number类型
+//   // name: string       // 错误，`name`的类型与索引类型返回值的类型不匹配
+//   name1: number
+// }
+// let arr: NumberDictionary
+// arr = [1, 1]
+// console.log('arr', arr)
+// 最后，你可以将索引签名设置为只读，这样就防止了给索引赋值：
+// interface ReadonlyStringArray {
+//   readonly [index: number]: string;
+// }
+// let myArray: ReadonlyStringArray = ["Alice", "Bob"];
+// console.log('myArray')
+// myArray[2] = "Mallory"; // error!
+// 你不能设置myArray[2]，因为索引签名是只读的
+
+// 类类型
+// 实现接口
+// 与C#或Java里接口的基本作用一样，TypeScript也能够用它来明确的强制一个类去符合某种契约。
+interface ClockInterface {
+  currentTime: Date;
 }
 
+// interface:接口只声明成员 方法，不做实现。
+
+// class:类声明并实现方法。
 
 
+
+class Clock implements ClockInterface {
+  currentTime: Date;
+  constructor(h: number, m: number) { }
+}
+// 你也可以在接口中描述一个方法，在类里实现它，如同下面的setTime方法一样：
+
+// interface ClockInterface {
+//   currentTime: Date;
+//   setTime(d: Date);
+// }
+
+// class Clock implements ClockInterface {
+//   currentTime: Date;
+//   setTime(d: Date) {
+//       this.currentTime = d;
+//   }
+//   constructor(h: number, m: number) { }
+// }
 
 
 
