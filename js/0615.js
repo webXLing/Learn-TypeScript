@@ -3,8 +3,711 @@
 //   console.log(num)
 // }
 // test(1);
-var square = {};
-square.color = "blue";
-square.sideLength = 10;
-square.setTime = [1, ''];
-square.setTime1 = [1];
+// let list: number[] = [1, 23, 4]
+// // 泛型
+// let list1: Array<number> = [1, 3, 4]
+// console.log(list, list1)
+// 元组 Tuple
+// let x: [string, number];
+// x = ['nihao',1,1] //error
+// x = [1,'nihao',1] //error
+// x = ['nihao', 1]
+// enum Color {Red = 1, Green = 2, Blue = 4}
+// let c: Color = Color.Green;
+// console.log(Color)
+// console.log(c)
+// enum Color { Red = 1, Green, Blue = '1232' }
+// let colorName: string = Color[2];
+// console.log(colorName)
+// console.log(Color);  // 显示'Green'因为上面代码里它的值是2
+// { "1": "Red", "2": "Green", "Red": 1, "Green": 2, "Blue": "1232" }
+// Any
+// let notSure: any = 4;
+// notSure = "maybe a string instead";
+// notSure = false; // okay, definitely a boolean
+// console.log(notSure)
+// 在对现有代码进行改写的时候，any类型是十分有用的，它允许你在编译时可选择地包含或移除类型检查。 你可能认为 Object有相似的作用，就像它在其它语言中那样。 但是 Object类型的变量只是允许你给它赋任意值 - 但是却不能够在它上面调用任意的方法，即便它真的有这些方法：
+// let notSure: any = 4;
+// notSure.ifItExists(); // okay, ifItExists might exist at runtime
+// notSure.toFixed(); // okay, toFixed exists (but the compiler doesn't check)
+// let prettySure: Object = 4;
+// prettySure.toFixed(); // Error: Property 'toFixed' doesn't exist on type 'Object'.
+// console.log(prettySure)
+// let list: any[] = [1, 'e23e3']
+// console.log(list)
+// Void
+// function VoidFunc(): void {
+//   console.log('当一个函数没有返回值的时候，它的返回值类型就是void')
+// }
+// let unusable: void = undefined;//申明一个void类型的变量 只能讲null、undefined赋值给它
+// let u: undefined = null  // 很奇怪 设置undefined 和 null 是可以 相互写的 默认情况下null和undefined是所有类型的子类型
+// let u1: null = undefined  // 很奇怪 设置undefined 和 null 是可以 相互写的
+// console.log(u)
+// Never never类型是那些总是会抛出异常或根本就不会有返回值的函数表达式或箭头函数表达式的返回值类型； 变量也可能是 never类型，当它们被永不为真的类型保护所约束时。
+// 返回错误的函数 或者是不返回任何东西的函数
+// never类型是任何类型的子类型，也可以赋值给任何类型；然而，没有类型是never的子类型或可以赋值给never类型（除了never本身之外）。 即使 any也不可以赋值给never。
+// 返回never的函数必须存在无法达到的终点
+// function error(message: string): never {
+//   throw new Error(message);
+// }
+// // 推断的返回值类型为never
+// function fail() {
+//   return error("Something failed");
+// }
+// // 返回never的函数必须存在无法达到的终点
+// function infiniteLoop(): never {
+//   while (true) {
+//   }
+// }
+// Object
+// object表示非原始类型，也就是除number，string，boolean，symbol，null或undefined之外的类型。
+// 使用object类型，就可以更好的表示像Object.create这样的API。例如：
+// declare function create(o: object | null): void;
+// function myobj(o: object | string | number): void {
+// }
+// create({ prop: 0 }); // OK
+// create(null); // OK
+// create(42); // Error
+// create("string"); // Error
+// create(false); // Error
+// create(undefined); // Error
+// let someValue: any = "this is a string";
+// let strLength: number = (<string>someValue).length;
+// let someValue: any = "this is a string";
+// let someValue: any = '2312';
+// let strLength: number = (someValue as string).length;
+// function sumMatrix(matrix: number[][]) {
+//   var sum = 0;
+//   for (var i = 0; i < matrix.length; i++) {
+//     var currentRow = matrix[i];
+//     for (var i = 0; i < currentRow.length; i++) {
+//       sum += currentRow[i];
+//     }
+//   }
+//   return sum;
+// }
+// sumMatrix([[1231], [3232]])
+// for (var i = 0; i < 10; i++) {
+//   // (function (i) {
+//   //   setTimeout(function () { console.log(i); }, 100 * i)
+//   // })(i)
+//   setTimeout(function () { console.log(i); }, 100 * i)
+// }
+// try {
+//   throw "oh no!";
+// }
+// catch (e) {
+//   var a = '1'
+//   console.log("Oh well.");
+// }
+// // Error: 'e' doesn't exist here
+// console.log(e);
+// function foo() {
+//   // okay to capture 'a'
+//   return a;
+// }
+// // 不能在'a'被声明前调用'foo'
+// // 运行时应该抛出错误
+// foo();
+// let a; // 和var 不同    let是不具有变量提升的  这也是它出现暂时性死区的原因 
+// function f(x) {
+//   var x;
+//   var x;
+//   if (true) {
+//     var x;
+//   }
+// }
+// function f(x) {
+//   // let x = 100; // error: interferes with parameter declaration
+//   // Parameter 'x' implicitly has an 'any' type, but a better type may be inferred from usage
+//   // implicitly 隐式的 含蓄的 
+// }
+// function g() {
+//   let x = 100;
+//   var x = 100; // error: can't have both declarations of 'x'
+// }
+// 并不是说块级作用域变量不能用函数作用域变量来声明。 而是块级作用域变量需要在明显不同的块里声明。
+// function f(condition, x) {
+//   if (condition) {
+//     let x = 100;
+//     return x;
+//   }
+//   return x;
+// }
+// f(false, 0); // returns 0
+// f(true, 0);  // returns 100
+// function(a = 1) {
+//   var a = 1
+// }
+// 块级作用域变量的获取
+// 在我们最初谈及获取用var声明的变量时，我们简略地探究了一下在获取到了变量之后它的行为是怎样的。 直观地讲，每次进入一个作用域时，它创建了一个变量的 环境。 就算作用域内代码已经执行完毕，这个环境与其捕获的变量依然存在。
+// function theCityThatAlwaysSleeps() {
+//   let getCity;
+//   if (true) {
+//       let city = "Seattle";
+//       getCity = function() {
+//           return city;
+//       }
+//   }
+//   return getCity();
+// }
+// 因为我们已经在city的环境里获取到了city，所以就算if语句执行结束后我们仍然可以访问它。
+// 回想一下前面setTimeout的例子，我们最后需要使用立即执行的函数表达式来获取每次for循环迭代里的状态。 实际上，我们做的是为获取到的变量创建了一个新的变量环境。 这样做挺痛苦的，但是幸运的是，你不必在TypeScript里这样做了。
+// let o = {
+//   a: "foo",
+//   b: 12,
+//   c: "bar"
+// };
+// // let { a, b } = o;
+// let { a, ...passthrough } = o;
+// let total = passthrough.b + passthrough.c.length;
+// console.log('passthrough', passthrough)
+// let { a: newName1, b: newName2 } = o;
+// console.log(newName1, newName2)
+// 这里的语法开始变得混乱。 你可以将 a: newName1 读做 "a 作为 newName1"。 方向是从左到右，好像你写成了以下样子：
+// let newName1 = o.a;
+// let newName2 = o.b;
+// 令人困惑的是，这里的冒号不是指示类型的。 如果你想指定它的类型， 仍然需要在其后写上完整的模式。
+// let { a: new1, b: new2 }: { a: string, b: number } = o;
+// console.log(new1)
+// console.log(new2)
+// 默认值
+// 默认值可以让你在属性为 undefined 时使用缺省值：
+// function keepWholeObject(wholeObject: { a: string, b?: number }) {
+//   let { a: xl, b: nihao = 1001 } = wholeObject;
+//   console.log(xl)
+//   console.log(nihao)
+// }
+// keepWholeObject({ a: 'nihao' })
+// 现在，即使 b 为 undefined ， keepWholeObject 函数的变量 wholeObject 的属性 a 和 b 都会有值。
+// 函数声明
+// type C = { a: string, b?: number }
+// function f({ a, b }: C): void {
+//   console.log(a)
+//   console.log(b)
+//   // ...
+// }
+// f({ a: 'string' })
+// 通常情况下更多的是指定默认值，解构默认值有些棘手。 首先，你需要在默认值之前设置其格式。
+// function f({ a = "", b = 0 } = {}): void {
+//   console.log(a, b)
+//   // ...
+// }
+// f();
+// 其次，你需要知道在解构属性上给予一个默认或可选的属性用来替换主初始化列表。 要知道 C 的定义有一个 b 可选属性：
+// function f({ a, b = 0 } = { a: "" }): void {
+//   // ...
+// }
+// f({ a: "yes" }); // ok, default b = 0
+// f(); // ok, default to {a: ""}, which then defaults b = 0
+// f({}); // error, 'a' is required if you supply an argument
+// 要小心使用解构。 从前面的例子可以看出，就算是最简单的解构表达式也是难以理解的。 尤其当存在深层嵌套解构的时候，就算这时没有堆叠在一起的重命名，默认值和类型注解，也是令人难以理解的。 解构表达式要尽量保持小而简单。 你自己也可以直接使用解构将会生成的赋值表达式。
+// 展开
+// 展开操作符正与解构相反。 它允许你将一个数组展开为另一个数组，或将一个对象展开为另一个对象。 例如：
+// let first = [1, 2];
+// let second = [3, 4];
+// let bothPlus = [0, ...first, ...second, 5];
+// 这会令bothPlus的值为[0, 1, 2, 3, 4, 5]。 展开操作创建了 first和second的一份浅拷贝。 它们不会被展开操作所改变。
+// 你还可以展开对象：
+// let defaults = { food: "spicy", price: "$$", ambiance: "noisy" };
+// let search = { ...defaults, food: "rich" };
+// search的值为{ food: "rich", price: "$$", ambiance: "noisy" }。 对象的展开比数组的展开要复杂的多。 像数组展开一样，它是从左至右进行处理，但结果仍为对象。 这就意味着出现在展开对象后面的属性会覆盖前面的属性。 因此，如果我们修改上面的例子，在结尾处进行展开的话：
+// 对象展开还有其它一些意想不到的限制。 首先，它仅包含对象 自身的可枚举属性。 大体上是说当你展开一个对象实例时，你会丢失其方法：
+// class C {
+//   p = 12;
+//   m() {
+//   }
+// }
+// let c = new C();
+// console.log(c)
+// let clone = { ...c };
+// console.log(clone)
+// clone.p; // ok
+// clone.m(); // error!
+// 接口初探
+// function printLabel(labelledObj: { label: string }) {
+//   console.log(labelledObj.label);
+// }
+// let myObj = { size: 10, label: "Size 10 Object" };
+// printLabel(myObj);
+// 类型检查器会查看printLabel的调用。 printLabel有一个参数，并要求这个对象参数有一个名为label类型为string的属性。 需要注意的是，我们传入的对象参数实际上会包含很多属性，但是编译器只会检查那些必需的属性是否存在，并且其类型是否匹配。 然而，有些时候TypeScript却并不会这么宽松，我们下面会稍做讲解。
+// interface LabelledValue {
+//   label: string;
+// }
+// function printLabel(labelledObj: LabelledValue) {
+//   console.log(labelledObj);
+// }
+// let myObj = {size: 10, label: "Size 10 Object"};
+// printLabel(myObj);
+// LabelledValue接口就好比一个名字，用来描述上面例子里的要求。 它代表了有一个 label属性且类型为string的对象。 需要注意的是，我们在这里并不能像在其它语言里一样，说传给 printLabel的对象实现了这个接口。我们只会去关注值的外形。 只要传入的对象满足上面提到的必要条件，那么它就是被允许的。
+// 还有一点值得提的是，类型检查器不会去检查属性的顺序，只要相应的属性存在并且类型也是对的就可以。
+// 可选属性
+// 接口里的属性不全都是必需的。 有些是只在某些条件下存在，或者根本不存在。 可选属性在应用“option bags”模式时很常用，即给函数传入的参数对象中只有部分属性赋值了。
+// 下面是应用了“option bags”的例子：
+// interface SquareConfig {
+//   color?: string;
+//   width?: number;
+// }
+// function createSquare(config: SquareConfig): { color: string; area: number } {
+//   let newSquare = { color: "white", area: 100 };
+//   if (config.color) {
+//     newSquare.color = config.color;
+//   }
+//   if (config.width) {
+//     newSquare.area = config.width * config.width;
+//   }
+//   console.log('newSquare', newSquare)
+//   return newSquare;
+// }
+// let mySquare = createSquare({ color: "black" });
+// let mySquare1 = createSquare({ area: 100 });
+// 带有可选属性的接口与普通的接口定义差不多，只是在可选属性名字定义的后面加一个?符号。
+// 可选属性的好处之一是可以对可能存在的属性进行预定义，好处之二是可以捕获引用了不存在的属性时的错误。 比如，我们故意将 createSquare里的color属性名拼错，就会得到一个错误提示：
+// question
+// interface SquareConfig {  
+//   color?: string;
+//   width?: number;
+// }
+// function createSquare(config: SquareConfig): { color: string; area: number } {
+//   let newSquare = { color: "white", area: 100 };
+//   if (config.color) {
+//     // Error: Property 'clor' does not exist on type 'SquareConfig'
+//     newSquare.color = config.color;
+//   }
+//   if (config.width) {
+//     newSquare.area = config.width * config.width;
+//   }
+//   console.log('config', config)
+//   return newSquare;
+// }
+// let obj = { width: 1, area: 1 }
+// let mySquare = createSquare({ color: "black" });
+// let mySquare1 = createSquare(obj);
+// let mySquare2 = createSquare({ width: 1, area: 1 });
+// 只读属性
+// 一些对象属性只能在对象刚刚创建的时候修改其值。 你可以在属性名前用 readonly来指定只读属性:
+// interface Point {
+//   readonly x: number;
+//   readonly y: number;
+// }
+// 你可以通过赋值一个对象字面量来构造一个Point。 赋值后， x和y再也不能被改变了。
+// let p1: Point = { x: 10, y: 20 };
+// p1.x = 5; // error!
+// TypeScript具有ReadonlyArray<T>类型，它与Array<T>相似，只是把所有可变方法去掉了，因此可以确保数组创建后再也不能被修改：
+// let a: number[] = [1, 2, 3, 4];
+// // let astr: ReadonlyArray<string> = ['wqe', 'ew', 'fdf']
+// // astr[0] = 1
+// let ro: ReadonlyArray<number> = a;
+// // ro[0] = 12; // error!
+// // ro.push(5); // error!
+// // ro.length = 100; // error!
+// // a = ro; // error!
+// // 上面代码的最后一行，可以看到就算把整个ReadonlyArray赋值到一个普通数组也是不可以的。 但是你可以用类型断言重写：
+// a = ro as number[];
+// console.log('ro', ro)
+// console.log('a', a)
+// readonly vs const
+// 最简单判断该用readonly还是const的方法是看要把它做为变量使用还是做为一个属性。 做为变量使用的话用 const，若做为属性则使用readonly。
+// 额外的属性检查
+// 我们在第一个例子里使用了接口，TypeScript让我们传入{ size: number; label: string; }到仅期望得到{ label: string; }的函数里。 我们已经学过了可选属性，并且知道他们在“option bags”模式里很有用。
+// 然而，天真地将这两者结合的话就会像在JavaScript里那样搬起石头砸自己的脚。 比如，拿 createSquare例子来说：
+// interface SquareConfig {
+//   color?: string;
+//   width?: number;
+// }
+// function createSquare(config: SquareConfig): { color: string; area: number } {
+//   console.log(config)
+//   return
+//   // ...
+// }
+// let obj = { colour: "red", width: 100 }
+// // let mySquare = createSquare({ colour: "red", width: 100 });
+// let mySquare1 = createSquare(obj);
+// // 注意传入createSquare的参数拼写为colour而不是color。 在JavaScript里，这会默默地失败。
+// // 你可能会争辩这个程序已经正确地类型化了，因为width属性是兼容的，不存在color属性，而且额外的colour属性是无意义的。
+// // 然而，TypeScript会认为这段代码可能存在bug。 对象字面量会被特殊对待而且会经过 额外属性检查，当将它们赋值给变量或作为参数传递的时候。 如果一个对象字面量存在任何“目标类型”不包含的属性时，你会得到一个错误。
+// // 绕开这些检查非常简单。 最简便的方法是使用类型断言：
+// let mySquare = createSquare({ width: 100, opacity: 0.5 } as SquareConfig);
+// 然而，最佳的方式是能够添加一个字符串索引签名，前提是你能够确定这个对象可能具有某些做为特殊用途使用的额外属性。 如果 SquareConfig带有上面定义的类型的color和width属性，并且还会带有任意数量的其它属性，那么我们可以这样定义它：
+// interface SquareConfig {
+//   color?: string;
+//   width?: number;
+//   [propName: number]: any;
+// }
+// function createSquare(config: SquareConfig): { color: string; area: number } {
+//   console.log(config)
+//   return
+//   // ...
+// }
+// let obj = { colour: "red", width: 100 }
+// 方法一 断言
+// let mySquare = createSquare({ colour: "red", width: 100 } as SquareConfig);
+// 方法二 赋值给一个变量
+// let squareOptions = { colour: "red", width: 100 };
+// let mySquare = createSquare(squareOptions);
+// 方法三 SquareConfig接口 添加一个字符串所以签名
+// 我们稍后会讲到索引签名，但在这我们要表示的是SquareConfig可以有任意数量的属性，并且只要它们不是color和width，那么就无所谓它们的类型是什么。
+// 还有最后一种跳过这些检查的方式，这可能会让你感到惊讶，它就是将这个对象赋值给一个另一个变量： 因为 squareOptions不会经过额外属性检查，所以编译器不会报错。
+// 要留意，在像上面一样的简单代码里，你可能不应该去绕开这些检查。 对于包含方法和内部状态的复杂对象字面量来讲，你可能需要使用这些技巧，但是大部额外属性检查错误是真正的bug。 就是说你遇到了额外类型检查出的错误，比如“option bags”，你应该去审查一下你的类型声明。 在这里，如果支持传入 color或colour属性到createSquare，你应该修改SquareConfig定义来体现出这一点。
+// 函数类型
+// 接口能够描述JavaScript中对象拥有的各种各样的外形。 除了描述带有属性的普通对象外，接口也可以描述函数类型。
+// 为了使用接口表示函数类型，我们需要给接口定义一个调用签名。 它就像是一个只有参数列表和返回值类型的函数定义。参数列表里的每个参数都需要名字和类型。
+// interface SearchFunc {
+//   (source: string, subString: string): boolean;
+//   // 参数列表 返回值
+// }
+// 这样定义后，我们可以像使用其它接口一样使用这个函数类型的接口。 下例展示了如何创建一个函数类型的变量，并将一个同类型的函数赋值给这个变量。
+// let mySearch: SearchFunc;
+// mySearch = function (source: string, subString: string) {
+//   let result = source.search(subString);
+//   return result > -1;
+// }
+// 对于函数类型的类型检查来说，函数的参数名不需要与接口里定义的名字相匹配。 比如，我们使用下面的代码重写上面的例子：
+// let mySearch: SearchFunc;
+// mySearch = function (src: string, sub: string): boolean {
+//   let result = src.search(sub);
+//   // String prototype 里面的方法  返回的是第一个被找到的元素下标 如果没找到返回-1
+//   console.log(result)
+//   // return result > -1;
+//   return result > -1;
+// }
+// mySearch('ewqe', 'wq')
+// mySearch('ewqe', 'l')
+// 函数的参数会逐个进行检查，要求对应位置上的参数类型是兼容的。 如果你不想指定类型，TypeScript的类型系统会推断出参数类型，因为函数直接赋值给了 SearchFunc类型变量。 函数的返回值类型是通过其返回值推断出来的（此例是 false和true）。 如果让这个函数返回数字或字符串，类型检查器会警告我们函数的返回值类型与 SearchFunc接口中的定义不匹配。
+// let mySearch: SearchFunc;
+// mySearch = function(src, sub) {
+//     let result = src.search(sub);
+//     return result > -1;
+// }
+// 可索引的类型
+// 与使用接口描述函数类型差不多，我们也可以描述那些能够“通过索引得到”的类型，比如a[10]或ageMap["daniel"]。 可索引类型具有一个 索引签名，它描述了对象索引的类型，还有相应的索引返回值类型。 让我们看一个例子
+// interface StringArray {
+//   [index: number]: string;
+// }
+// let myArray: StringArray;
+// myArray = ["Bob", "Fred"];
+// let myStr: string = myArray[0];
+// 上面例子里，我们定义了StringArray接口，它具有索引签名。 这个索引签名表示了当用 number去索引StringArray时会得到string类型的返回值。
+// TypeScript支持两种索引签名：字符串和数字。 可以同时使用两种类型的索引，但是数字索引的返回值必须是字符串索引返回值类型的子类型。 这是因为当使用 number来索引时，JavaScript会将它转换成string然后再去索引对象。 也就是说用 100（一个number）去索引等同于使用"100"（一个string）去索引，因此两者需要保持一致。
+// class Animal {
+//   // constructor(){
+//   //   let name: string;
+//   // }
+//   name: string;
+// }
+// class Dog extends Animal {
+//   breed: string;
+// }
+// 错误：使用数值型的字符串索引，有时会得到完全不同的Animal!
+// interface NotOkay {
+//   [x: number]: Animal;
+//   [x: string]: Dog;
+// }
+// 字符串索引签名能够很好的描述dictionary模式，并且它们也会确保所有属性与其返回值类型相匹配。 因为字符串索引声明了 obj.property和obj["property"]两种形式都可以。 下面的例子里， name的类型与字符串索引类型不匹配，所以类型检查器给出一个错误提示：
+// interface NumberDictionary {
+//   [index: string]: number;
+//   length: number;    // 可以，length是number类型
+//   // name: string       // 错误，`name`的类型与索引类型返回值的类型不匹配
+//   name1: number
+// }
+// let arr: NumberDictionary
+// arr = [1, 1]
+// console.log('arr', arr)
+// 最后，你可以将索引签名设置为只读，这样就防止了给索引赋值：
+// interface ReadonlyStringArray {
+//   readonly [index: number]: string;
+// }
+// let myArray: ReadonlyStringArray = ["Alice", "Bob"];
+// console.log('myArray')
+// myArray[2] = "Mallory"; // error!
+// 你不能设置myArray[2]，因为索引签名是只读的
+// 类类型
+// 实现接口
+// 与C#或Java里接口的基本作用一样，TypeScript也能够用它来明确的强制一个类去符合某种契约。
+// interface ClockInterface {
+//   currentTime: Date;
+// }
+// interface:接口只声明成员 方法，不做实现。
+// class:类声明并实现方法。
+// class Clock implements ClockInterface {
+//   currentTime: Date;
+//   constructor(h: number, m: number) {  }
+// }
+// 你也可以在接口中描述一个方法，在类里实现它，如同下面的setTime方法一样：
+// interface ClockInterface {
+//   currentTime: Date;
+//   setTime(d: Date);
+// }
+// class Clock implements ClockInterface {
+//   currentTime: Date;
+//   setTime(d: Date) {
+//       this.currentTime = d;
+//   }
+//   constructor(h: number, m: number) { }
+// }
+// 接口描述了类的公共部分，而不是公共和私有两部分。 它不会帮你检查类是否具有某些私有成员。
+// 类静态部分与实例部分的区别
+// 当你操作类和接口的时候，你要知道类是具有两个类型的：静态部分的类型和实例的类型。 你会注意到，当你用构造器签名去定义一个接口并试图定义一个类去实现这个接口时会得到一个错误：
+// interface ClockConstructor {
+//   new(hour: number, minute: number);
+// }
+// class Clock implements ClockConstructor {
+//   // currentTime: Date;
+//   constructor(h: number, m: number) { }
+// }
+// interface Myinter {
+//   name: string
+// }
+// class Myclass implements Myinter {
+//   constructor() {
+//     name = ''
+//   }
+// }
+// 这里因为当一个类实现了一个接口时，只对其实例部分进行类型检查。 constructor存在于类的静态部分，所以不在检查的范围内。
+// 因此，我们应该直接操作类的静态部分。 看下面的例子，我们定义了两个接口， ClockConstructor为构造函数所用和ClockInterface为实例方法所用。 为了方便我们定义一个构造函数 createClock，它用传入的类型创建实例。
+// interface ClockConstructor {
+//   new(hour: number, minute: number): ClockInterface;
+// }
+// interface ClockInterface {
+//   tick();
+// }
+// function createClock(ctor: ClockConstructor, hour: number, minute: number): ClockInterface {
+//   return new ctor(hour, minute);
+// }
+// class DigitalClock implements ClockInterface {
+//   constructor(h: number, m: number) { }
+//   tick() {
+//     console.log("beep beep");
+//   }
+// }
+// class AnalogClock implements ClockInterface {
+//   constructor(h: number, m: number) { }
+//   tick() {
+//     console.log("tick tock");
+//   }
+// }
+// let digital = createClock(DigitalClock, 12, 17);
+// let analog = createClock(AnalogClock, 7, 32);
+// 因为createClock的第一个参数是ClockConstructor类型，在createClock(AnalogClock, 7, 32)里，会检查AnalogClock是否符合构造函数签名。
+// 继承接口
+// 和类一样，接口也可以相互继承。 这让我们能够从一个接口里复制成员到另一个接口里，可以更灵活地将接口分割到可重用的模块里。
+// interface Shape {
+//   color: string;
+// }
+// interface Square extends Shape {
+//   sideLength: number;
+//   setTime: Array<any>;
+//   setTime1: Array<number>;
+// }
+// let square = <Square>{};
+// square.color = "blue";
+// square.sideLength = 10;
+// square.setTime = [1, ''];
+// square.setTime1 = [1];
+// 一个接口可以继承多个接口，创建出多个接口的合成接口。
+// interface Shape {
+//   color: string;
+// }
+// interface PenStroke {
+//   penWidth: number;
+// }
+// interface Square extends Shape, PenStroke {
+//   sideLength: number;
+// }
+// let square = <Square>{};
+// square.color = "blue";
+// square.sideLength = 10;
+// square.penWidth = 5.0;
+// 混合类型
+// 先前我们提过，接口能够描述JavaScript里丰富的类型。 因为JavaScript其动态灵活的特点，有时你会希望一个对象可以同时具有上面提到的多种类型。
+// 一个例子就是，一个对象可以同时做为函数和对象使用，并带有额外的属性。
+// interface Counter {
+//   (start: number): string;
+//   interval: number;
+//   reset(): void;
+// }
+// function getCounter(): Counter {
+//   let counter = <Counter>function (start: number) { };
+//   counter.interval = 123;
+//   counter.reset = function () { };
+//   return counter;
+// }
+// let c = getCounter();
+// c(10);
+// c.reset();
+// c.interval = 5.0;
+// 在使用JavaScript第三方库的时候，你可能需要像上面那样去完整地定义类型。
+// 类
+// 下面看一个使用类的例子：
+// class Greeter {
+//   greeting: string;
+//   constructor(message: string) {
+//     this.greeting = message;
+//   }
+//   greet() {
+//     return "Hello, " + this.greeting;
+//   }
+// }
+// let greeter = new Greeter("world");
+// class Animal {
+//   constructor(theName: string) {
+//     this.name = theName;
+//     console.log('Animal constructor')
+//   }
+//   move(distanceInMeters: number = 0) {
+//     console.log(`${this.name} moved ${distanceInMeters}m.`);
+//   }
+// }
+// class Snake extends Animal {
+//   constructor(name: string) { super(name); }
+//   move(distanceInMeters = 5) {
+//     console.log("Slithering...");
+//     super.move(distanceInMeters);
+//   }
+// }
+// class Horse extends Animal {
+//   constructor(name: string) { super(name); }
+//   move(distanceInMeters = 45) {
+//     console.log("Galloping...");
+//     super.move(distanceInMeters);
+//   }
+// }
+// let sam = new Snake("Sammy the Python");
+// let tom: Animal = new Horse("Tommy the Palomino");
+// sam.move(); // 5
+// tom.move(34); // 34
+// 这个例子展示了一些上面没有提到的特性。 这一次，我们使用 extends关键字创建了 Animal的两个子类： Horse和 Snake。
+// 与前一个例子的不同点是，派生类包含了一个构造函数，它 必须调用 super()，它会执行基类的构造函数。 而且，在构造函数里访问 this的属性之前，我们 一定要调用 super()。 这个是TypeScript强制执行的一条重要规则。
+// 这个例子演示了如何在子类里可以重写父类的方法。 Snake类和 Horse类都创建了 move方法，它们重写了从 Animal继承来的 move方法，使得 move方法根据不同的类而具有不同的功能。 注意，即使 tom被声明为 Animal类型，但因为它的值是 Horse，调用 tom.move(34)时，它会调用 Horse里重写的方法：
+// 公共，私有与受保护的修饰符
+// 默认为 public
+// 在上面的例子里，我们可以自由的访问程序里定义的成员。 如果你对其它语言中的类比较了解，就会注意到我们在之前的代码里并没有使用 public来做修饰；例如，C#要求必须明确地使用 public指定成员是可见的。 在TypeScript里，成员都默认为 public。
+// 你也可以明确的将一个成员标记成 public。 我们可以用下面的方式来重写上面的 Animal类：
+// class Animal {
+//   public name: string;
+//   public constructor(theName: string) { this.name = theName; }
+//   public move(distanceInMeters: number) {
+//     console.log(`${this.name} moved ${distanceInMeters}m.`);
+//   }
+// }
+// class Animal1 {
+//   private name: string;
+//   public constructor(theName: string) { this.name = theName; }
+//   public move(distanceInMeters: number) {
+//     console.log(`${this.name} moved ${distanceInMeters}m.`);
+//   }
+// }
+// // let an1: Animal = new Animal('an1')
+// // console.log(an1.name)
+// let an2: Animal = new Animal1('a2')
+// console.log(an2.name)
+// 理解 private
+// 当成员被标记成 private时，它就不能在声明它的类的外部访问。比如：
+// class Animal {
+//   private name: string;
+//   constructor(theName: string) {
+//     this.name = '1';
+//     console.log(this.name)
+//   }
+// }
+// new Animal("Cat").name; // 错误: 'name' 是私有的.
+// TypeScript使用的是结构性类型系统。 当我们比较两种不同的类型时，并不在乎它们从何处而来，如果所有成员的类型都是兼容的，我们就认为它们的类型是兼容的。
+// 然而，当我们比较带有 private或 protected成员的类型的时候，情况就不同了。 如果其中一个类型里包含一个 private成员，那么只有当另外一个类型中也存在这样一个 private成员， 并且它们都是来自同一处声明时，我们才认为这两个类型是兼容的。 对于 protected成员也使用这个规则。
+// 下面来看一个例子，更好地说明了这一点：
+// class Animal {
+//   private name: string;
+//   constructor(theName: string) { this.name = theName; }
+// }
+// class Rhino extends Animal {
+//   constructor() { super("Rhino"); }
+// }
+// class Employee {
+//   private name: string;
+//   constructor(theName: string) {
+//     this.name = theName;
+//     console.log('this.name Employee', this.name)
+//   }
+// }
+// let animal = new Animal("Goat");
+// let rhino = new Rhino();
+// let employee = new Employee("Bob");
+// // console.log(employee.name)
+// animal = rhino;
+// animal = employee; // 错误: Animal 与 Employee 不兼容.
+// 这个例子中有 Animal和 Rhino两个类， Rhino是 Animal类的子类。 还有一个 Employee类，其类型看上去与 Animal是相同的。 我们创建了几个这些类的实例，并相互赋值来看看会发生什么。 因为 Animal和 Rhino共享了来自 Animal里的私有成员定义 private name: string，因此它们是兼容的。 然而 Employee却不是这样。当把 Employee赋值给 Animal的时候，得到一个错误，说它们的类型不兼容。 尽管 Employee里也有一个私有成员 name，但它明显不是 Animal里面定义的那个。
+// 理解 protected
+// protected修饰符与 private修饰符的行为很相似，但有一点不同， protected成员在派生类中仍然可以访问。例如：
+// class Person {
+//   protected name: string;
+//   constructor(name: string) { this.name = name; }
+// }
+// class Employee extends Person {
+//   private department: string;
+//   constructor(name: string, department: string) {
+//     super(name)
+//     this.department = department;
+//   }
+//   public getElevatorPitch() {
+//     return `Hello, my name is ${this.name} and I work in ${this.department}.`;
+//   }
+// }
+// let howard = new Employee("Howard", "Sales");
+// console.log(howard.getElevatorPitch());
+// console.log(howard.name); // 错误
+// class Person {
+//   private name: string;
+//   constructor(name: string) { this.name = name; }
+// }
+// class Teacher extends Person {
+//   constructor(name: string) {
+//     super(name)
+//   }
+//   getname() {
+//     console.log('this.name', this.name)
+//   }
+// }
+// 注意，我们不能在 Person类外使用 name，但是我们仍然可以通过 Employee类的实例方法访问，因为 Employee是由 Person派生而来的。
+// 构造函数也可以被标记成 protected。 这意味着这个类不能在包含它的类外被实例化，但是能被继承。比如，
+// class Person {
+//   protected name: string;
+//   protected constructor(theName: string) { this.name = theName; }
+// }
+// Employee 能够继承 Person
+// class Employee extends Person {
+//   private department: string;
+//   constructor(name: string, department: string) {
+//     super(name);
+//     this.department = department;
+//   }
+//   public getElevatorPitch() {
+//     return `Hello, my name is ${this.name} and I work in ${this.department}.`;
+//   }
+// }
+// let howard = new Employee("Howard", "Sales");
+// let john = new Person("John"); // 错误: 'Person' 的构造函数是被保护的.
+// readonly修饰符
+// 你可以使用 readonly关键字将属性设置为只读的。 只读属性必须在声明时或构造函数里被初始化。
+// class Octopus {
+//   readonly name: string;
+//   readonly numberOfLegs: number = 8;
+//   constructor(theName: string) {
+//     this.name = theName;
+//   }
+// }
+// let dad = new Octopus("Man with the 8 strong legs");
+// dad.name = "Man with the 3-piece suit"; // 错误! name 是只读的.
+// console.log('dad.name', dad.name)
+// 参数属性
+// 在上面的例子中，我们必须在Octopus类里定义一个只读成员 name和一个参数为 theName的构造函数，并且立刻将 theName的值赋给 name，这种情况经常会遇到。 参数属性可以方便地让我们在一个地方定义并初始化一个成员。 下面的例子是对之前 Octopus类的修改版，使用了参数属性：
+var Octopus = /** @class */ (function () {
+    function Octopus(name) {
+        this.name = name;
+        this.numberOfLegs = 8;
+        this.theName = name;
+    }
+    return Octopus;
+}());
+function identity(arg) {
+    return arg;
+}
+var myIdentity = identity;
