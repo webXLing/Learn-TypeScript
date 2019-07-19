@@ -888,13 +888,13 @@
 
 // 参数属性
 // 在上面的例子中，我们必须在Octopus类里定义一个只读成员 name和一个参数为 theName的构造函数，并且立刻将 theName的值赋给 name，这种情况经常会遇到。 参数属性可以方便地让我们在一个地方定义并初始化一个成员。 下面的例子是对之前 Octopus类的修改版，使用了参数属性：
-class Octopus {
-  readonly numberOfLegs: number = 8;
-  theName: string
-  constructor(readonly name: string) {
-    this.theName = name
-  }
-}
+// class Octopus {
+//   readonly numberOfLegs: number = 8;
+//   theName: string
+//   constructor(readonly name: string) {
+//     this.theName = name
+//   }
+// }
 
 // 注意看我们是如何舍弃了 theName，仅在构造函数里使用 readonly name: string参数来创建和初始化 name成员。 我们把声明和赋值合并至一处。
 
@@ -1472,6 +1472,7 @@ class Octopus {
 //   }
 //   if (Array.isArray(arg) ) {
 //     console.log(arg.length);  // Error: T doesn't have .length
+//     // return arg.length
 //   }
 
 //   return arg;
@@ -1504,9 +1505,16 @@ class Octopus {
 // function identity<T>(arg: T): T {
 //   return arg;
 // }
+// interface myinter {
+//   (arg: string): boolean
+// }
+// let test: myinter = function (arg) {
+//   return arg === 'a'
+// }
+// test('1')
+// test(1)
 
 // let myIdentity: <T>(arg: T) => T = identity;
-
 
 // 我们也可以使用不同的泛型参数名，只要在数量上和使用方式上能对应上就可以。
 
@@ -1525,14 +1533,262 @@ class Octopus {
 // let myIdentity: {<T>(arg: T): T} = identity;
 
 // 这引导我们去写第一个泛型接口了。 我们把上面例子里的对象字面量拿出来做为一个接口：
-interface GenericIdentityFn {
-  <T>(arg: T): T;
+// interface GenericIdentityFn {
+//   <T>(arg: T): T;
+// }
+
+// function identity<T>(arg: T): T {
+//   return arg;
+// }
+
+// let myIdentity: GenericIdentityFn = identity;
+// 一个相似的例子，我们可能想把泛型参数当作整个接口的一个参数。 这样我们就能清楚的知道使用的具体是哪个泛型类型（比如： Dictionary<string>而不只是Dictionary）。 这样接口里的其它成员也能知道这个参数的类型了。
+
+// interface GenericIdentityFn<T> {
+//   (arg: T): T;
+// }
+
+// function identity<T>(arg: T): T {
+//   return arg;
+// }
+
+// let myIdentity: GenericIdentityFn<number> = identity;
+// console.log(identity('a'))
+// console.log(myIdentity(1))
+
+// 注意，我们的示例做了少许改动。 不再描述泛型函数，而是把非泛型函数签名作为泛型类型一部分。 当我们使用 GenericIdentityFn的时候，还得传入一个类型参数来指定泛型类型（这里是：number），锁定了之后代码里使用的类型。 对于描述哪部分类型属于泛型部分来说，理解何时把参数放在调用签名里和何时放在接口上是很有帮助的。
+
+// 除了泛型接口，我们还可以创建泛型类。 注意，无法创建泛型枚举和泛型命名空间。
+
+// 泛型类
+// 泛型类看上去与泛型接口差不多。 泛型类使用（ <>）括起泛型类型，跟在类名后面。
+// class GenericNumber<T> {
+//   zeroValue: T;
+//   // constructor(zeroValue:T) {
+//   //   this.zeroValue = zeroValue
+//   // }
+//   add: (x: T, y: T) => T
+// }
+
+// let myGenericNumber = new GenericNumber<number>();
+// myGenericNumber.zeroValue = 0;
+// myGenericNumber.add = function (x, y) { return x + y; };
+
+// GenericNumber类的使用是十分直观的，并且你可能已经注意到了，没有什么去限制它只能使用number类型。 也可以使用字符串或其它更复杂的类型。
+
+// let stringNumeric = new GenericNumber<string>();
+// stringNumeric.zeroValue = "";
+// stringNumeric.add = function (x, y) { return x + y; };
+
+// console.log(stringNumeric.add(stringNumeric.zeroValue, "test"));
+// 与接口一样，直接把泛型类型放在类后面，可以帮助我们确认类的所有属性都在使用相同的类型。
+
+// 我们在类那节说过，类有两部分：静态部分和实例部分。 泛型类指的是实例部分的类型，所以类的静态属性不能使用这个泛型类型。
+
+// 泛型约束
+// 你应该会记得之前的一个例子，我们有时候想操作某类型的一组值，并且我们知道这组值具有什么样的属性。 在 loggingIdentity例子中，我们想访问arg的length属性，但是编译器并不能证明每种类型都有length属性，所以就报错了。
+// function loggingIdentity<T>(arg: T): T {
+//   console.log(arg.length);  // Error: T doesn't have .length
+//   return arg;
+// }
+// 相比于操作any所有类型，我们想要限制函数去处理任意带有.length属性的所有类型。 只要传入的类型有这个属性，我们就允许，就是说至少包含这一属性。 为此，我们需要列出对于T的约束要求。
+
+// 为此，我们定义一个接口来描述约束条件。 创建一个包含 .length属性的接口，使用这个接口和extends关键字来实现约束：
+
+// interface Lengthwise {
+//   length: number;
+// }
+
+// function loggingIdentity<T extends Lengthwise>(arg: T): T {
+//   console.log(arg.length);  // Now we know it has a .length property, so no more error
+//   return arg;
+// }
+// 现在这个泛型函数被定义了约束，因此它不再是适用于任意类型：
+// loggingIdentity(3);  // Error, number doesn't have a .length property
+// loggingIdentity({length: 10, value: 3});
+
+// 在泛型约束中使用类型参数
+// 你可以声明一个类型参数，且它被另一个类型参数所约束。 比如，现在我们想要用属性名从对象里获取这个属性。 并且我们想要确保这个属性存在于对象 obj上，因此我们需要在这两个类型之间使用约束。
+
+// function getProperty(obj: T, key: K) {
+//   return obj[key];
+// }
+
+// let x = { a: 1, b: 2, c: 3, d: 4 };
+
+// console.log(getProperty(x, "a")) // okay
+// console.log(getProperty(x, "m")); // error: Argument of type 'm' isn't assignable to 'a' | 'b' | 'c' | 'd'.
+
+// 在泛型里使用类类型
+// 在TypeScript使用泛型创建工厂函数时，需要引用构造函数的类类型。比如，
+// function create<T>(c: { new(): T; }): T {
+//   return new c();
+// }
+// // 一个更高级的例子，使用原型属性推断并约束构造函数与类实例的关系。
+
+// class BeeKeeper {
+//   hasMask: boolean;
+// }
+
+// class ZooKeeper {
+//   nametag: string;
+// }
+
+// class Animal {
+//   numLegs: number;
+// }
+
+// class Bee extends Animal {
+//   keeper: BeeKeeper;
+// }
+
+// class Lion extends Animal {
+//   keeper: ZooKeeper;
+// }
+
+// function createInstance<A extends Animal>(c: new () => A): A {
+//   return new c();
+// }
+// console.log(createInstance(Lion))
+// console.log(createInstance(Bee))
+
+
+// createInstance(Lion).keeper.nametag;  // typechecks!
+// createInstance(Bee).keeper.hasMask;   // typechecks!
+
+// 枚举
+// 使用枚举我们可以定义一些带名字的常量。 使用枚举可以清晰地表达意图或创建一组有区别的用例。 TypeScript支持数字的和基于字符串的枚举。
+
+// 数字枚举
+// 首先我们看看数字枚举，如果你使用过其它编程语言应该会很熟悉
+
+// enum Direction {
+//   Up = 1,
+//   Down,
+//   Left,
+//   Right
+// }
+// console.log(Direction)
+
+// 如上，我们定义了一个数字枚举， Up使用初始化为 1。 其余的成员会从 1开始自动增长。 换句话说， Direction.Up的值为 1， Down为 2， Left为 3， Right为 4。
+
+// 我们还可以完全不使用初始化器：
+// enum Direction {
+//   Up,
+//   Down,
+//   Left,
+//   Right,
+// }
+// console.log(Direction)
+// 现在， Up的值为 0， Down的值为 1等等。 当我们不在乎成员的值的时候，这种自增长的行为是很有用处的，但是要注意每个枚举成员的值都是不同的。
+
+// 使用枚举很简单：通过枚举的属性来访问枚举成员，和枚举的名字来访问枚举类型：
+// enum Responses {
+//   No = 0,
+//   Yes = 1,
+// }
+// console.log(Responses)
+
+// function respond(recipient: string, message: Responses): void {
+//   console.log(message)
+//   // ...
+// }
+
+// respond("Princess Caroline", Responses.Yes)
+
+// function getSomeValue(){
+//   return 1
+// }
+// 数字枚举可以被混入到 计算过的和常量成员（如下所示）。 简短地说，不带初始化器的枚举或者被放在第一的位置，或者被放在使用了数字常量或其它常量初始化了的枚举后面。 换句话说，下面的情况是不被允许的
+// enum E {
+//   A = getSomeValue(),
+//   B, // error! 'A' is not constant-initialized, so 'B' needs an initializer
+// }
+
+// 字符串枚举
+// 字符串枚举的概念很简单，但是有细微的 运行时的差别。 在一个字符串枚举里，每个成员都必须用字符串字面量，或另外一个字符串枚举成员进行初始化。
+
+// enum Direction {
+//   Up = "UP",
+//   Down = "DOWN",
+//   Left = "LEFT",
+//   Right = "RIGHT"
+// }
+// console.log('Direction', Direction)
+
+// 由于字符串枚举没有自增长的行为，字符串枚举可以很好的序列化。 换句话说，如果你正在调试并且必须要读一个数字枚举的运行时的值，这个值通常是很难读的 - 它并不能表达有用的信息（尽管 反向映射会有所帮助），字符串枚举允许你提供一个运行时有意义的并且可读的值，独立于枚举成员的名字。
+
+// 异构枚举（Heterogeneous enums）
+// 从技术的角度来说，枚举可以混合字符串和数字成员，但是似乎你并不会这么做：
+// enum BooleanLikeHeterogeneousEnum {
+//   No = 0,
+//   Yes = "YES",
+// }
+
+// 除非你真的想要利用JavaScript运行时的行为，否则我们不建议这样做。
+
+// 计算的和常量成员
+// 每个枚举成员都带有一个值，它可以是 常量或 计算出来的。 当满足如下条件时，枚举成员被当作是常量：
+
+// 它是枚举的第一个成员且没有初始化器，这种情况下它被赋予值 0：
+// E.X is constant:
+// enum E { X }
+
+// 它不带有初始化器且它之前的枚举成员是一个 数字常量。 这种情况下，当前枚举成员的值为它上一个枚举成员的值加1。
+// All enum members in 'E1' and 'E2' are constant.
+
+// enum E1 { X, Y, Z }
+
+// enum E2 {
+//   A = 1 / 0, B, C
+// }
+
+// 枚举成员使用 常量枚举表达式初始化。 常数枚举表达式是TypeScript表达式的子集，它可以在编译阶段求值。 当一个表达式满足下面条件之一时，它就是一个常量枚举表达式：
+
+// 一个枚举表达式字面量（主要是字符串字面量或数字字面量）
+// 一个对之前定义的常量枚举成员的引用（可以是在不同的枚举类型中定义的）
+// 带括号的常量枚举表达式
+// 一元运算符 +, -, ~其中之一应用在了常量枚举表达式
+// 常量枚举表达式做为二元运算符 +, -, *, /, %, <<, >>, >>>, &, |, ^的操作对象。 若常数枚举表达式求值后为 NaN或 Infinity，则会在编译阶段报错。
+
+// 所有其它情况的枚举成员被当作是需要计算得出的值
+
+// enum FileAccess {
+//   // constant members
+//   None,
+//   Read = 1 << 1,
+//   Write = 1 << 2,
+//   ReadWrite = Read | Write,
+//   // computed member
+//   G = "123".length
+// }
+
+// 联合枚举与枚举成员的类型
+// 存在一种特殊的非计算的常量枚举成员的子集：字面量枚举成员。 字面量枚举成员是指不带有初始值的常量枚举成员，或者是值被初始化为
+
+// 任何字符串字面量（例如： "foo"， "bar"， "baz"）
+// 任何数字字面量（例如： 1, 100）
+// 应用了一元 -符号的数字字面量（例如： -1, -100）
+// 当所有枚举成员都拥有字面量枚举值时，它就带有了一种特殊的语义。
+
+// 首先，枚举成员成为了类型！ 例如，我们可以说某些成员 只能是枚举成员的值：
+enum ShapeKind {
+  Circle,
+  Square,
 }
 
-
-function identity<T>(arg: T): T {
-  return arg;
+interface Circle {
+  kind: ShapeKind.Circle;
+  radius: number;
 }
 
+interface Square {
+  kind: ShapeKind.Square;
+  sideLength: number;
+}
 
-let myIdentity: GenericIdentityFn = identity;
+let c: Circle = {
+  kind: ShapeKind.Square,
+  //    ~~~~~~~~~~~~~~~~ Error!
+  radius: 100,
+}
