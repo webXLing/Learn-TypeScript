@@ -1787,8 +1787,8 @@ interface Square {
   sideLength: number;
 }
 
-let c: Circle = {
-  kind: ShapeKind.Square,
-  //    ~~~~~~~~~~~~~~~~ Error!
-  radius: 100,
-}
+// let c: Circle = {
+//   kind: ShapeKind.Square,
+//   //    ~~~~~~~~~~~~~~~~ Error!
+//   radius: 100,
+// }
